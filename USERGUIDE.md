@@ -75,6 +75,54 @@ print(ns["greeting"])  # "hello world"
 print(ns["result"])    # 42
 ```
 
+## Node class
+
+Config Tree provides a `Node` class for building tree structures.
+
+```python
+from config_tree.node import Node
+```
+
+### Creating nodes
+
+```python
+root = Node("root", type="container")
+```
+
+| Parameter    | Type   | Default | Description              |
+|--------------|--------|---------|--------------------------|
+| `name`       | str    | required| The name of the node     |
+| `type`       | str    | `None`  | The type of the node     |
+| `children`   | list   | `[]`    | Initial list of child nodes |
+| `attributes` | list   | `[]`    | Initial list of attributes  |
+
+### Adding children
+
+```python
+root = Node("root")
+child = root.add_child(Node("child", type="leaf"))
+```
+
+`add_child` appends the child and returns it, so you can chain or capture the reference.
+
+### Adding attributes
+
+```python
+node = Node("server", type="host")
+node.add_attribute("ip_address")
+node.add_attribute("port")
+```
+
+### Building a tree
+
+```python
+root = Node("datacenter", type="dc")
+rack = root.add_child(Node("rack-1", type="rack"))
+server = rack.add_child(Node("web-01", type="host"))
+server.add_attribute("ip_address")
+server.add_attribute("port")
+```
+
 ## Notes
 
 - If the `commands/` directory does not exist, the config file runs without any preloaded commands.
