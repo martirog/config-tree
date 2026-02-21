@@ -63,7 +63,7 @@ def double(x):
 | Variable     | Type         | Description                                      |
 |--------------|--------------|--------------------------------------------------|
 | `CONFIG_DIR` | str          | Absolute path to the directory containing the config file |
-| `PARENT_NODE`| Node or None | The node passed to `execute_config`, or `None` if not provided |
+| `PARENT_NODE`| Node or None | The node passed to `execute_config`, or `None` if not provided. Also injected into each command module's namespace. |
 
 ## Config file
 
@@ -138,7 +138,7 @@ server.add_attribute("port")
 
 ### add.file
 
-Creates a `Node` instance from a file path.
+Creates a `Node` instance from a file path and adds it as a child of `PARENT_NODE`.
 
 ```python
 from config_tree.commands.add import file
@@ -152,7 +152,7 @@ node = file("/path/to/config.txt", type="config", attributes=["readonly"])
 | `type`       | str        | `None`  | The type of the node             |
 | `attributes` | list       | `[]`    | List of attributes for the node  |
 
-Returns a `Node` with `name` set to the full path string.
+Returns a `Node` with `name` set to the full path string. The node is automatically added as a child of `PARENT_NODE`.
 
 **Example in a config file:**
 
@@ -161,6 +161,7 @@ When `add.py` is placed in the `commands/` directory, the `file` function is ava
 ```python
 config = file("/etc/app/config.yaml", type="config", attributes=["readonly", "required"])
 schema = file("/etc/app/schema.json", type="schema")
+# Both nodes are now children of PARENT_NODE
 ```
 
 ## Notes
