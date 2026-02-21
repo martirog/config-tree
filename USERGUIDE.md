@@ -16,7 +16,7 @@ from config_tree.executor import execute_config
 result = execute_config("/path/to/my_config.py")
 ```
 
-You can optionally pass a `Node` instance that will be available as `node` in the config file:
+You can optionally pass a `Node` instance that will be available as `PARENT_NODE` in the config file:
 
 ```python
 from config_tree.executor import execute_config
@@ -63,7 +63,7 @@ def double(x):
 | Variable     | Type         | Description                                      |
 |--------------|--------------|--------------------------------------------------|
 | `CONFIG_DIR` | str          | Absolute path to the directory containing the config file |
-| `node`       | Node or None | The node passed to `execute_config`, or `None` if not provided |
+| `PARENT_NODE`| Node or None | The node passed to `execute_config`, or `None` if not provided |
 
 ## Config file
 

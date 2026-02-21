@@ -81,7 +81,7 @@ def test_private_names_not_exported():
 
 def test_node_is_available_in_namespace():
     with tempfile.TemporaryDirectory() as tmp:
-        config_file = make_config_tree(tmp, config_content="result = node.name")
+        config_file = make_config_tree(tmp, config_content="result = PARENT_NODE.name")
         n = Node("test-node")
         ns = execute_config(config_file, node=n)
         assert ns["result"] == "test-node"
@@ -89,6 +89,6 @@ def test_node_is_available_in_namespace():
 
 def test_node_defaults_to_none():
     with tempfile.TemporaryDirectory() as tmp:
-        config_file = make_config_tree(tmp, config_content="result = node")
+        config_file = make_config_tree(tmp, config_content="result = PARENT_NODE")
         ns = execute_config(config_file)
         assert ns["result"] is None

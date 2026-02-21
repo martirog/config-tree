@@ -8,7 +8,7 @@ def execute_config(config_path, node=None):
         raise FileNotFoundError(f"Config file not found: {config_path}")
 
     config_dir = config_path.parent
-    namespace = {"CONFIG_DIR": str(config_dir), "node": node}
+    namespace = {"CONFIG_DIR": str(config_dir), "PARENT_NODE": node}
 
     commands_dir = config_dir / "commands"
     if commands_dir.is_dir():
