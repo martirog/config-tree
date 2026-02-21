@@ -1,5 +1,10 @@
+import config_tree.commands.add as add_module
 from config_tree.commands.add import file
 from config_tree.node import Node
+
+
+def setup_function():
+    add_module.PARENT_NODE = Node("parent")
 
 
 def test_file_returns_node():
@@ -38,3 +43,10 @@ def test_file_with_all_args():
     assert node.type == "system"
     assert node.attributes == ["readonly"]
     assert node.children == []
+
+
+def test_file_adds_child_to_parent():
+    parent = Node("parent")
+    add_module.PARENT_NODE = parent
+    child = file("/path/to/config.txt")
+    assert parent.children == [child]

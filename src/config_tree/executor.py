@@ -17,6 +17,7 @@ def execute_config(config_path, node=None):
             spec = importlib.util.spec_from_file_location(module_name, cmd_file)
             module = importlib.util.module_from_spec(spec)
             spec.loader.exec_module(module)
+            module.PARENT_NODE = node
             for name in dir(module):
                 if not name.startswith("_"):
                     namespace[name] = getattr(module, name)
