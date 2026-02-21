@@ -2,13 +2,13 @@ import importlib.util
 from pathlib import Path
 
 
-def execute_config(config_path):
+def execute_config(config_path, node=None):
     config_path = Path(config_path).resolve()
     if not config_path.is_file():
         raise FileNotFoundError(f"Config file not found: {config_path}")
 
     config_dir = config_path.parent
-    namespace = {"CONFIG_DIR": str(config_dir)}
+    namespace = {"CONFIG_DIR": str(config_dir), "node": node}
 
     commands_dir = config_dir / "commands"
     if commands_dir.is_dir():

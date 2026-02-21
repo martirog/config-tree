@@ -1,8 +1,8 @@
-import os
 import tempfile
 from pathlib import Path
 
 from config_tree.executor import execute_config
+from config_tree.node import Node
 
 
 def make_config_tree(tmp_path, commands=None, config_content=""):
@@ -77,3 +77,18 @@ def test_private_names_not_exported():
         ns = execute_config(config_file)
         assert ns["public"] == 99
         assert "_secret" not in ns
+
+
+def test_node_is_available_in_namespace():
+    with tempfile.TemporaryDirectory() as tmp:
+        config_file = make_config_tree(tmp, config_content="result = node.name")
+        n = Node("test-node")
+        ns = execute_config(config_file, node=n)
+        assert ns["result"] == "test-node"
+
+
+def test_node_defaults_to_none():
+    with tempfile.TemporaryDirectory() as tmp:
+        config_file = make_config_tree(tmp, config_content="result = node")
+        ns = execute_config(config_file)
+        assert ns["result"] is None
