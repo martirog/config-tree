@@ -123,6 +123,35 @@ server.add_attribute("ip_address")
 server.add_attribute("port")
 ```
 
+## Built-in commands
+
+### add.file
+
+Creates a `Node` instance from a file path.
+
+```python
+from config_tree.commands.add import file
+
+node = file("/path/to/config.txt", type="config", attributes=["readonly"])
+```
+
+| Parameter    | Type       | Default | Description                      |
+|--------------|------------|---------|----------------------------------|
+| `path`       | str        | required| The file path, used as the node name |
+| `type`       | str        | `None`  | The type of the node             |
+| `attributes` | list       | `[]`    | List of attributes for the node  |
+
+Returns a `Node` with `name` set to the full path string.
+
+**Example in a config file:**
+
+When `add.py` is placed in the `commands/` directory, the `file` function is available directly:
+
+```python
+config = file("/etc/app/config.yaml", type="config", attributes=["readonly", "required"])
+schema = file("/etc/app/schema.json", type="schema")
+```
+
 ## Notes
 
 - If the `commands/` directory does not exist, the config file runs without any preloaded commands.
