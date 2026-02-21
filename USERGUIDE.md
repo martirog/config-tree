@@ -16,6 +16,16 @@ from config_tree.executor import execute_config
 result = execute_config("/path/to/my_config.py")
 ```
 
+You can optionally pass a `Node` instance that will be available as `node` in the config file:
+
+```python
+from config_tree.executor import execute_config
+from config_tree.node import Node
+
+root = Node("root", type="container")
+result = execute_config("/path/to/my_config.py", node=root)
+```
+
 `execute_config` returns a dictionary containing the namespace after execution, including any variables or functions defined in the config file and the loaded commands.
 
 ## Directory structure
@@ -50,9 +60,10 @@ def double(x):
 
 ## Built-in variables
 
-| Variable     | Type | Description                                      |
-|--------------|------|--------------------------------------------------|
-| `CONFIG_DIR` | str  | Absolute path to the directory containing the config file |
+| Variable     | Type         | Description                                      |
+|--------------|--------------|--------------------------------------------------|
+| `CONFIG_DIR` | str          | Absolute path to the directory containing the config file |
+| `node`       | Node or None | The node passed to `execute_config`, or `None` if not provided |
 
 ## Config file
 
