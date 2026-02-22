@@ -1,6 +1,6 @@
 # Config Tree User Guide
 
-Config Tree executes a Python config file with a pre-loaded environment. Before your config file runs, all Python modules in a sibling `commands/` directory are imported and their public names are made available in your config file's namespace.
+Config Tree executes a Python config file with a pre-loaded environment. Before your config file runs, all Python modules in a sibling `commands/` directory are imported and made available in your config file's namespace as modules.
 
 ## Installation
 
@@ -42,7 +42,7 @@ my_project/
 
 ## Commands
 
-Each `.py` file in the `commands/` directory is imported as a module. All public names (those not starting with `_`) are made available in your config file's namespace.
+Each `.py` file in the `commands/` directory is imported as a module and available in the config file's namespace under the filename (without `.py`). You access its contents using `module.attribute` syntax.
 
 Command files are loaded in alphabetical order.
 
@@ -71,8 +71,8 @@ Your config file is a regular Python file. It can use anything loaded from the `
 
 **config.py**
 ```python
-greeting = hello("world")
-result = double(21)
+greeting = greet.hello("world")
+result = math_helpers.double(21)
 print(f"Running from {CONFIG_DIR}")
 ```
 
@@ -84,6 +84,7 @@ The namespace returned by `execute_config` contains everything defined during ex
 ns = execute_config("my_project/config.py")
 print(ns["greeting"])  # "hello world"
 print(ns["result"])    # 42
+print(ns["greet"])     # <module 'greet' from '...'>
 ```
 
 ## Node class
@@ -141,9 +142,7 @@ server.add_attribute("port")
 Creates a `Node` instance from a file path and adds it as a child of `PARENT_NODE`.
 
 ```python
-from config_tree.commands.add import file
-
-node = file("/path/to/config.txt", type="config", attributes=["readonly"])
+node = add.file("/path/to/config.txt", type="config", attributes=["readonly"])
 ```
 
 | Parameter    | Type       | Default | Description                      |
@@ -156,11 +155,9 @@ Returns a `Node` with `name` set to the full path string. The node is automatica
 
 **Example in a config file:**
 
-When `add.py` is placed in the `commands/` directory, the `file` function is available directly:
-
 ```python
-config = file("/etc/app/config.yaml", type="config", attributes=["readonly", "required"])
-schema = file("/etc/app/schema.json", type="schema")
+config = add.file("/etc/app/config.yaml", type="config", attributes=["readonly", "required"])
+schema = add.file("/etc/app/schema.json", type="schema")
 # Both nodes are now children of PARENT_NODE
 ```
 
@@ -168,4 +165,4 @@ schema = file("/etc/app/schema.json", type="schema")
 
 - If the `commands/` directory does not exist, the config file runs without any preloaded commands.
 - If the config file does not exist, a `FileNotFoundError` is raised.
-- Names starting with `_` in command modules are treated as private and are not exported.
+- Command modules are accessed by their filename (without `.py`) using `module.attribute` syntax.
