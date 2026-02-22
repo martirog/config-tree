@@ -207,6 +207,75 @@ PARENT_NODE
     └── /etc/app/schema.json
 ```
 
+## Traversing a tree
+
+The `traverse` function walks a node tree depth-first, notifying a listener at each node.
+
+```python
+from config_tree.traverse import traverse
+
+traverse(root_node, listener)
+```
+
+| Parameter  | Type   | Description                        |
+|------------|--------|------------------------------------|
+| `node`     | Node   | The root node to start from        |
+| `listener` | object | An object with `action`, `entry`, and `exit` methods |
+
+### Listener interface
+
+A listener must implement three methods:
+
+| Method           | Description                                                                 |
+|------------------|-----------------------------------------------------------------------------|
+| `action(node)`   | Called first for each node. The return value replaces the node for subsequent calls. |
+| `entry(node)`    | Called after `action`, before visiting children.                            |
+| `exit(node)`     | Called after all children have been visited.                                |
+
+### Traversal order
+
+For each node the order is:
+1. `action(node)` — transform or replace the node
+2. `entry(node)` — node is entered
+3. Recurse into each child
+4. `exit(node)` — node is exited
+
+### Example
+
+```python
+from config_tree.node import Node
+from config_tree.traverse import traverse
+
+
+class PrintListener:
+    def __init__(self):
+        self.depth = 0
+
+    def action(self, node):
+        return node
+
+    def entry(self, node):
+        print("  " * self.depth + f"+ {node.name}")
+        self.depth += 1
+
+    def exit(self, node):
+        self.depth -= 1
+
+
+root = Node("root")
+child = root.add_child(Node("child"))
+child.add_child(Node("grandchild"))
+
+traverse(root, PrintListener())
+```
+
+Output:
+```
++ root
+  + child
+    + grandchild
+```
+
 ## Notes
 
 - If the `commands/` directory does not exist, the config file runs without any preloaded commands.
