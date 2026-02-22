@@ -10,19 +10,18 @@ def test_listener_is_abstract():
         pass
 
 
-def test_listener_requires_action():
-    class MissingAction(Listener):
+def test_action_default_returns_node():
+    class MinimalListener(Listener):
         def entry(self, node):
             pass
 
         def exit(self, node):
             pass
 
-    try:
-        MissingAction()
-        assert False, "Expected TypeError"
-    except TypeError:
-        pass
+    from config_tree.node import Node
+    node = Node("test")
+    listener = MinimalListener()
+    assert listener.action(node) is node
 
 
 def test_listener_requires_entry():

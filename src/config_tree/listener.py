@@ -2,9 +2,8 @@ from abc import ABC, abstractmethod
 
 
 class Listener(ABC):
-    @abstractmethod
     def action(self, node):
-        pass
+        return node
 
     @abstractmethod
     def entry(self, node):
