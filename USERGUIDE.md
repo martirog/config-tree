@@ -161,6 +161,52 @@ schema = add.file("/etc/app/schema.json", type="schema")
 # Both nodes are now children of PARENT_NODE
 ```
 
+### include.config
+
+Executes another config file as a nested node in the tree. Creates a new `Node` of type `"CONFIG_NODE"`, adds it as a child of `PARENT_NODE`, then runs the given config file with the new node as its `PARENT_NODE`.
+
+```python
+node = include.config("/path/to/other/config.py")
+```
+
+| Parameter | Type | Default  | Description                              |
+|-----------|------|----------|------------------------------------------|
+| `path`    | str  | required | Path to the config file to include       |
+
+Returns the newly created `CONFIG_NODE`. Any nodes created inside the included config file will be attached as its children, enabling recursive tree building.
+
+**Example:**
+
+```
+my_project/
+├── root.py
+├── commands/
+│   ├── add.py
+│   └── include.py
+└── subsystem/
+    └── config.py
+```
+
+**root.py**
+```python
+subsystem = include.config(CONFIG_DIR + "/subsystem/config.py")
+```
+
+**subsystem/config.py**
+```python
+add.file("/etc/app/config.yaml", type="config")
+add.file("/etc/app/schema.json", type="schema")
+```
+
+The resulting tree will be:
+
+```
+PARENT_NODE
+└── subsystem/config.py  (CONFIG_NODE)
+    ├── /etc/app/config.yaml
+    └── /etc/app/schema.json
+```
+
 ## Notes
 
 - If the `commands/` directory does not exist, the config file runs without any preloaded commands.
