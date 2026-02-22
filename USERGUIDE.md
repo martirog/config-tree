@@ -230,9 +230,6 @@ Config Tree provides an abstract base class for listeners:
 from config_tree.listener import Listener
 
 class MyListener(Listener):
-    def action(self, node):
-        return node
-
     def entry(self, node):
         pass
 
@@ -240,17 +237,17 @@ class MyListener(Listener):
         pass
 ```
 
-All three methods are abstract and must be implemented. Attempting to instantiate a subclass with any method missing will raise a `TypeError`.
+`entry` and `exit` are abstract and must be implemented. `action` has a default implementation that returns the node unchanged — override it only if you need to transform or replace nodes. Attempting to instantiate a subclass with `entry` or `exit` missing will raise a `TypeError`.
 
 ### Listener interface
 
 A listener must implement three methods:
 
-| Method           | Description                                                                 |
-|------------------|-----------------------------------------------------------------------------|
-| `action(node)`   | Called first for each node. The return value replaces the node for subsequent calls. |
-| `entry(node)`    | Called after `action`, before visiting children.                            |
-| `exit(node)`     | Called after all children have been visited.                                |
+| Method           | Abstract | Description                                                                 |
+|------------------|----------|-----------------------------------------------------------------------------|
+| `action(node)`   | No       | Called first for each node. The return value replaces the node for subsequent calls. Defaults to returning the node unchanged. |
+| `entry(node)`    | Yes      | Called after `action`, before visiting children.                            |
+| `exit(node)`     | Yes      | Called after all children have been visited.                                |
 
 ### Traversal order
 
@@ -271,9 +268,6 @@ from config_tree.traverse import traverse
 class PrintListener(Listener):
     def __init__(self):
         self.depth = 0
-
-    def action(self, node):
-        return node
 
     def entry(self, node):
         print("  " * self.depth + f"+ {node.name}")
