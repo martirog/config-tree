@@ -18,9 +18,7 @@ def execute_config(config_path, node=None):
             module = importlib.util.module_from_spec(spec)
             spec.loader.exec_module(module)
             module.PARENT_NODE = node
-            for name in dir(module):
-                if not name.startswith("_"):
-                    namespace[name] = getattr(module, name)
+            namespace[module_name] = module
 
     exec(compile(config_path.read_text(), str(config_path), "exec"), namespace)
 

@@ -32,7 +32,7 @@ def test_commands_are_loaded():
         config_file = make_config_tree(
             tmp,
             commands=commands,
-            config_content="result = hello('world')",
+            config_content="result = greet.hello('world')",
         )
         ns = execute_config(config_file)
         assert ns["result"] == "hello world"
@@ -47,7 +47,7 @@ def test_multiple_commands_loaded_in_order():
         config_file = make_config_tree(
             tmp,
             commands=commands,
-            config_content="result = value_a + value_b",
+            config_content="result = a_first.value_a + b_second.value_b",
         )
         ns = execute_config(config_file)
         assert ns["result"] == 3
@@ -68,15 +68,18 @@ def test_missing_config_file_raises():
         pass
 
 
-def test_private_names_not_exported():
+def test_command_loaded_as_module():
     with tempfile.TemporaryDirectory() as tmp:
         commands = {
-            "internal.py": "_secret = 42\npublic = 99\n",
+            "mymod.py": "value = 99\n",
         }
-        config_file = make_config_tree(tmp, commands=commands, config_content="")
+        config_file = make_config_tree(
+            tmp,
+            commands=commands,
+            config_content="result = mymod.value",
+        )
         ns = execute_config(config_file)
-        assert ns["public"] == 99
-        assert "_secret" not in ns
+        assert ns["result"] == 99
 
 
 def test_node_is_available_in_namespace():
