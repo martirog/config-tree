@@ -222,6 +222,26 @@ traverse(root_node, listener)
 | `node`     | Node   | The root node to start from        |
 | `listener` | object | An object with `action`, `entry`, and `exit` methods |
 
+### Listener base class
+
+Config Tree provides an abstract base class for listeners:
+
+```python
+from config_tree.listener import Listener
+
+class MyListener(Listener):
+    def action(self, node):
+        return node
+
+    def entry(self, node):
+        pass
+
+    def exit(self, node):
+        pass
+```
+
+All three methods are abstract and must be implemented. Attempting to instantiate a subclass with any method missing will raise a `TypeError`.
+
 ### Listener interface
 
 A listener must implement three methods:
@@ -243,11 +263,12 @@ For each node the order is:
 ### Example
 
 ```python
+from config_tree.listener import Listener
 from config_tree.node import Node
 from config_tree.traverse import traverse
 
 
-class PrintListener:
+class PrintListener(Listener):
     def __init__(self):
         self.depth = 0
 
