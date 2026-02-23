@@ -10,10 +10,24 @@ pip install .
 
 ## Usage
 
+The simplest way to parse a config tree is with `read_config`:
+
+```python
+from config_tree.executor import read_config
+
+root = read_config("/path/to/my_config.py")
+```
+
+`read_config` creates a `TOP_NODE`, executes the config file with it as `PARENT_NODE`, and returns the populated node. All nodes created by commands in the config file are attached as children.
+
+### Low-level usage
+
+For more control, use `execute_config` directly:
+
 ```python
 from config_tree.executor import execute_config
 
-result = execute_config("/path/to/my_config.py")
+ns = execute_config("/path/to/my_config.py")
 ```
 
 You can optionally pass a `Node` instance that will be available as `PARENT_NODE` in the config file:
@@ -23,7 +37,7 @@ from config_tree.executor import execute_config
 from config_tree.node import Node
 
 root = Node("root", type="container")
-result = execute_config("/path/to/my_config.py", node=root)
+ns = execute_config("/path/to/my_config.py", node=root)
 ```
 
 `execute_config` returns a dictionary containing the namespace after execution, including any variables or functions defined in the config file and the loaded commands.
