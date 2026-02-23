@@ -1,6 +1,14 @@
 import importlib.util
 from pathlib import Path
 
+from config_tree.node import Node
+
+
+def read_config(path):
+    node = Node(name=str(path), type="TOP_NODE")
+    execute_config(str(path), node=node)
+    return node
+
 
 def execute_config(config_path, node=None):
     config_path = Path(config_path).resolve()
