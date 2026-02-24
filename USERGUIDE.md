@@ -305,6 +305,45 @@ Output:
     + grandchild
 ```
 
+## Help system
+
+`print_help` inspects one or more command directories and prints formatted help to stdout, based on module and function docstrings.
+
+```python
+from config_tree.help import print_help
+
+print_help(["path/to/commands"])
+```
+
+| Parameter      | Type | Description                              |
+|----------------|------|------------------------------------------|
+| `command_dirs` | list | List of directories to inspect           |
+
+For each command file it prints:
+- The module name as a heading (`# module_name`)
+- The module docstring as a description
+- Each public function as `module_name.function_name` followed by its docstring
+
+**Example output:**
+
+```
+# add
+Commands for adding nodes to the config tree.
+
+add.file
+Create a node from a file path and add it as a child of PARENT_NODE.
+...
+
+# include
+Commands for including nested config files in the tree.
+
+include.config
+Execute a config file as a nested node and add it as a child of PARENT_NODE.
+...
+```
+
+Files are processed in alphabetical order. `__init__.py`, private functions (starting with `_`), and imported functions are excluded.
+
 ## Notes
 
 - If the `commands/` directory does not exist, the config file runs without any preloaded commands.
