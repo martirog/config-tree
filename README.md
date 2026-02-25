@@ -1,5 +1,7 @@
 # config-tree
 
+> **Disclaimer:** This is a proof of concept. It is not intended for production use.
+
 A Python library for executing config files as programs and building tree structures from the results.
 
 Config files are plain Python scripts executed in a pre-loaded environment. Before execution, command modules from one or more `commands/` directories are imported into the namespace, giving config files access to helper functions for building a node tree.
