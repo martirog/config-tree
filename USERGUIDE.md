@@ -20,6 +20,23 @@ root = read_config("/path/to/my_config.py")
 
 `read_config` creates a `TOP_NODE`, executes the config file with it as `PARENT_NODE`, and returns the populated node. All nodes created by commands in the config file are attached as children.
 
+### Specifying command directories
+
+By default, commands are loaded from a sibling `commands/` directory next to the config file. You can override this by passing a list of directories:
+
+```python
+from config_tree.executor import read_config, LOCAL_COMMANDS
+
+root = read_config("/path/to/my_config.py", command_dirs=[
+    "/shared/commands",
+    LOCAL_COMMANDS,
+])
+```
+
+`LOCAL_COMMANDS` is a sentinel value that means "include the sibling `commands/` directory of the config file". You can mix it with explicit paths. If an explicit path does not exist, a `NotADirectoryError` is raised. If `command_dirs` is omitted, it defaults to `[LOCAL_COMMANDS]`.
+
+The same `command_dirs` list is passed through to any nested configs executed via `include.config`.
+
 ### Low-level usage
 
 For more control, use `execute_config` directly:
@@ -40,7 +57,7 @@ root = Node("root", type="container")
 ns = execute_config("/path/to/my_config.py", node=root)
 ```
 
-`execute_config` returns a dictionary containing the namespace after execution, including any variables or functions defined in the config file and the loaded commands.
+`execute_config` also accepts `command_dirs` with the same behaviour as `read_config`. It returns a dictionary containing the namespace after execution, including any variables or functions defined in the config file and the loaded commands.
 
 ## Directory structure
 
