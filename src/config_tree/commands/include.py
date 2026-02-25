@@ -19,5 +19,5 @@ def config(path):
     """
     node = Node(name=str(path), type="CONFIG_NODE")
     PARENT_NODE.add_child(node)
-    execute_config(str(path), node=node)
+    execute_config(str(path), node=node, command_dirs=COMMAND_DIRS)
     return node

@@ -3,11 +3,13 @@ from pathlib import Path
 
 import config_tree.commands.include as include_module
 from config_tree.commands.include import config
+from config_tree.executor import LOCAL_COMMANDS
 from config_tree.node import Node
 
 
 def setup_function():
     include_module.PARENT_NODE = Node("parent")
+    include_module.COMMAND_DIRS = [LOCAL_COMMANDS]
 
 
 def make_config_file(tmp_path, content=""):
